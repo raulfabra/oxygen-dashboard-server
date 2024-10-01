@@ -8,5 +8,5 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["app.ts", "**/*", "src/**/*"]
+  "include": ["src/**/*"]
 }
