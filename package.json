@@ -4,20 +4,25 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node node-rooms-csv/index.ts",
-    "dev": "nodemon src/app.ts",
-    "build": "rimraf dist && tsc"
+    "start": "node dist/server.js",
+    "dev": "nodemon src/server.ts",
+    "build": "rimraf dist && tsc",
+    "deploy": "npm run build && serverless deploy --force",
+    "test": "jest --coverage --verbose"
   },
   "keywords": [],
   "author": "Raul",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "16.4.5",
     "express": "4.21.0",
-    "serverless-http": "3.2.0",
-    "@types/node": "22.7.4"
+    "jsonwebtoken": "9.0.2",
+    "serverless-http": "3.2.0"
   },
   "devDependencies": {
+    "@types/node": "22.7.4",
     "@types/express": "5.0.0",
+    "@types/jsonwebtoken": "9.0.7",
     "nodemon": "3.1.7",
     "rimraf": "6.0.1",
     "ts-node": "10.9.2",
