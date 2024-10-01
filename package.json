@@ -1,0 +1,27 @@
+{
+  "name": "oxygen-dashboard-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node node-rooms-csv/index.ts",
+    "dev": "nodemon app.ts",
+    "build": "rimraf dist && tsc",
+    "helloworld": "ts-node helloworld/app.js"
+  },
+  "keywords": [],
+  "author": "Raul",
+  "license": "ISC",
+  "dependencies": {
+    "express": "4.21.0",
+    "serverless-http": "3.2.0",
+    "@types/node": "22.7.4"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.0",
+    "nodemon": "3.1.7",
+    "rimraf": "6.0.1",
+    "ts-node": "10.9.2",
+    "typescript": "5.6.2"
+  }
+}
