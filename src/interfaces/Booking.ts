@@ -1,37 +1,23 @@
 export interface Booking {
-  id: string;
-  id_booking: number;
+  id: number;
   fullName: string;
-  booking: BookingClass;
-  request: string;
-  room: Room;
-  statusBooking: StatusBooking;
-}
-
-export interface BookingClass {
   orderDate: Date;
-  checkIn: Check;
-  checkOut: Check;
+  checkin: Date;
+  checkout: Date;
+  request: string;
+  roomType: RoomType;
+  roomNumber: number;
+  status: Status;
 }
 
-export interface Check {
-  date: string;
-  time: string;
-}
-
-export interface Room {
-  type: Type;
-  number: string;
-}
-
-export enum Type {
+export enum RoomType {
   DoubleBed = "Double Bed",
   DoubleSuperior = "Double Superior",
   SingleBed = "Single Bed",
   Suite = "Suite",
 }
 
-export enum StatusBooking {
+export enum Status {
   Booked = "Booked",
   Canceled = "Canceled",
   Pending = "Pending",

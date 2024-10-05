@@ -1,31 +1,23 @@
 export interface Room {
-  id_room: number;
-  typeRoom: TypeRoom;
-  numberRoom: string;
-  priceNight: string;
-  offersRoom: OffersRoom;
-  statusRoom: StatusRoom;
-  cancellationRoom: string;
-}
-
-export interface OffersRoom {
+  id: number;
+  typeRoom_bed: TypeRoomBed;
+  description: string;
+  facilities: string;
+  pictures: string;
+  numberRoom: number;
+  priceNight: number;
   isOffer: boolean;
   discount: number;
+  status: Status;
+  cancellation: string;
 }
 
-export enum StatusRoom {
+export enum Status {
   Available = "Available",
   Booked = "Booked",
 }
 
-export interface TypeRoom {
-  bed: Bed;
-  description: string;
-  amenities: string;
-  pictures: string;
-}
-
-export enum Bed {
+export enum TypeRoomBed {
   DoubleBed = "Double Bed",
   DoubleSuperior = "Double Superior",
   SingleBed = "Single Bed",
