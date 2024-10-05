@@ -1,11 +1,13 @@
-import { loginController } from "./controllers/login";
-import { bookingsController } from "./controllers/booking";
+import infoController from "./controllers/info";
+import loginController from "./controllers/login";
+import bookingsController from "./controllers/booking";
 import roomsController from "./controllers/room";
 import express from "express";
 
 export const app = express();
 
 // public routes
+app.use("/", infoController);
 app.use("/login", loginController);
 
 // private routes
