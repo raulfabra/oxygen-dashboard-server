@@ -14,15 +14,17 @@
   "author": "Raul",
   "license": "ISC",
   "dependencies": {
+    "cors": "2.8.5",
     "dotenv": "16.4.5",
     "express": "4.21.0",
     "jsonwebtoken": "9.0.2",
     "serverless-http": "3.2.0"
   },
   "devDependencies": {
-    "@types/node": "22.7.4",
+    "@types/cors": "^2.8.17",
     "@types/express": "5.0.0",
     "@types/jsonwebtoken": "9.0.7",
+    "@types/node": "22.7.4",
     "nodemon": "3.1.7",
     "rimraf": "6.0.1",
     "ts-node": "10.9.2",

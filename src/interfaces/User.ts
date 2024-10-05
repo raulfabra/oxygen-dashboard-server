@@ -1,16 +1,15 @@
 export interface User {
-  id: string;
-  id_user: number;
+  id: number;
   fullName: string;
   email: string;
   phone: string;
   jobDesk: string;
-  statusEmployeer: StatusEmployeer;
-  start_date: string;
+  StartDate: Date;
   picture: string;
+  status: Status;
 }
 
-export enum StatusEmployeer {
+export enum Status {
   Active = "Active",
   Inactive = "Inactive",
 }

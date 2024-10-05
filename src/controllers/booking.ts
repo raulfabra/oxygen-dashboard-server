@@ -17,7 +17,7 @@ bookingsController.get("/", async (req: Request, res: Response) => {
   }
 });
 
-bookingsController.get(":id", async (req: Request<{ id: number }>, res: Response) => {
+bookingsController.get("/:id", async (req: Request<{ id: number }>, res: Response) => {
   const { id } = req.params;
 
   // Buscamos la habitación por su id

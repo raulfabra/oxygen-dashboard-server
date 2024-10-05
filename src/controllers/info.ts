@@ -9,9 +9,9 @@ infoController.get("/", (req: Request, res: Response) => {
       name: "Hotel Paradise",
       endpoints: [
         { name: "Booking", path: "/booking", methods: ["GET", "POST", "PUT", "DELETE"] },
-        { name: "Room", path: "/rooms", methods: ["GET", "POST", "PUT", "DELETE"] },
-        { name: "User", path: "/users", methods: ["GET", "POST", "PUT", "DELETE"] },
-        { name: "Customer", path: "/customers", methods: ["GET", "POST", "PUT", "DELETE"] },
+        { name: "Room", path: "/room", methods: ["GET", "POST", "PUT", "DELETE"] },
+        { name: "User", path: "/user", methods: ["GET", "POST", "PUT", "DELETE"] },
+        { name: "Customer", path: "/customer", methods: ["GET", "POST", "PUT", "DELETE"] },
       ],
     };
 
