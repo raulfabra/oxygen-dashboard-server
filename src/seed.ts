@@ -1,53 +1,39 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import UserModel from "./validators/userModel";
-import { faker } from "@faker-js/faker";
-import { Status, User } from "./interfaces/User";
+import { dbConnection } from "./db/dbConnection";
+import { checkDatabaseExist } from "./db/dbCheckExist";
+import { getCollections } from "./services/collections/getCollections";
+import { seedUsers } from "./db/dbSeed/seedUsers";
+import { seedRooms } from "./db/dbSeed/seedRooms";
 
 dotenv.config();
 
+const dbName = "hotel";
+
 export async function seedDB() {
   try {
-    const uri = process.env.dbURI || "";
-    await mongoose.connect(uri);
-    console.log("Connected correctly to server");
+    // Abrir conexión
+    await dbConnection();
 
-    //Ver bases de datos
-    const admin = mongoose.connection.db?.admin();
-    const databases = await admin?.listDatabases();
-    console.log("Bases de datos: ", databases?.databases);
+    // Verificar que exista la BD
+    const dbExists = await checkDatabaseExist(dbName);
 
-    // Verificar si la BD existe
-    const dbExists = databases?.databases.some((db) => db.name === "hotel");
     if (dbExists) {
-      // Obtener las colecciones
-      const collections = await mongoose.connection.db?.collections();
-      const collectionNames = collections?.map((collection) => collection.collectionName);
-      console.log("Colecciones: ", collectionNames);
+      const allCollections = await getCollections();
 
-      if (collectionNames!.length > 0) {
+      if (allCollections && allCollections.length > 0) {
         // Eliminar todas las colecciones
-        for (const collection of collections!) {
+        for (const collection of allCollections) {
           await collection.deleteMany({});
           console.log(`Colección ${collection.collectionName} ha sido limpiada.`);
         }
       }
     }
 
-    // Crear usuarios falsos
-    const fakeUsers: User[] = Array.from({ length: 10 }, (_, index) => ({
-      fullName: faker.person.fullName(),
-      email: faker.internet.email(),
-      phone: faker.phone.number(),
-      jobDesk: faker.person.jobTitle(),
-      startDate: faker.date.past({ years: 5 }),
-      picture: faker.image.avatar(),
-      status: faker.helpers.arrayElement([Status.Active, Status.Inactive]),
-    }));
-
-    // Insertar usuarios en la colección
-    await UserModel.insertMany(fakeUsers);
-    console.log("10 usuarios falsos han sido creados en la colección de usuarios.");
+    await seedUsers();
+    await seedRooms();
+    /* await seedCustomers();
+    await seedBookings(); */
   } catch (err: any) {
     console.log(err.stack);
   } finally {

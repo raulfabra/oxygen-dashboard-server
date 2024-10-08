@@ -57,6 +57,6 @@ const CustomerSchema = new mongoose.Schema<CustomerSchemaInterface>({
   },
 });
 
-const Customer = mongoose.model("Customer", CustomerSchema);
+const CustomerModal = mongoose.model("Customer", CustomerSchema);
 
-export default Customer;
+export default CustomerModal;
