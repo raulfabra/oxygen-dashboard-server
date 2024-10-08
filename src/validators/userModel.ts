@@ -15,7 +15,7 @@ interface UserSchemaInterface extends Document {
 const UserSchema = new mongoose.Schema<UserSchemaInterface>({
   id: {
     type: Number,
-    required: true,
+    required: false,
     unique: true,
   },
   fullName: {
@@ -50,6 +50,6 @@ const UserSchema = new mongoose.Schema<UserSchemaInterface>({
   },
 });
 
-const User = mongoose.model("User", UserSchema);
+const UserModel = mongoose.model("User", UserSchema);
 
-export default User;
+export default UserModel;
