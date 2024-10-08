@@ -1,10 +1,11 @@
 import { Request, Response, Router } from "express";
 import { Room } from "../interfaces/Room";
+import authMiddleware from "../middleware/auth";
 import roomsData from "../data/dataRooms.json";
 
 const roomsController = Router();
 
-roomsController.get("/", async (req: Request, res: Response) => {
+roomsController.get("/", authMiddleware, async (req: Request, res: Response) => {
   try {
     if (!roomsData || roomsData.length === 0) {
       res.status(404).json({ message: "No rooms found" });

@@ -18,6 +18,7 @@ app.use("/", infoController);
 app.use("/login", loginController);
 
 // private routes
+
 app.use("/booking", bookingsController);
 
 app.use("/room", roomsController);
