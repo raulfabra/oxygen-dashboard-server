@@ -15,7 +15,7 @@ interface UserSchemaInterface extends Document {
 const UserSchema = new mongoose.Schema<UserSchemaInterface>({
   id: {
     type: Number,
-    required: false,
+    required: true,
     unique: true,
   },
   fullName: {
