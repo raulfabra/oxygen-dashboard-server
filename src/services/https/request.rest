@@ -1,0 +1,40 @@
+GET http://localhost:3001
+###
+GET http://localhost:3001/booking
+###
+GET http://localhost:3001/room
+###
+GET http://localhost:3001/user
+###
+GET http://localhost:3001/customer
+
+###
+POST http://localhost:3001/login
+content-type: application/json
+
+{
+  "id": 100,
+  "email": "employer33@gmail.com",
+  "password": "1234"
+}
+###
+POST http://localhost:3001/room
+content-type: application/json
+
+{
+
+}
+###
+POST http://localhost:3001/booking
+content-type: application/json
+
+{
+
+}
+###
+POST http://localhost:3001/user
+content-type: application/json
+
+{
+
+}

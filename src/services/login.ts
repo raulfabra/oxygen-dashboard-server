@@ -1,23 +1,30 @@
+import { mockUser } from "../utils/constants";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
-const defaultUser = {
-  id: 100,
-  email: "employer33@gmail.com",
-  password: "1234",
-};
-const TOKEN_SECRET = require("crypto").randomBytes(64).toString("hex");
+dotenv.config();
 
-async function login(user: string, pass: string) {
+function login(id: number, email: string, password: string) {
   // Check if the user and password are correct
+  if (email === mockUser.email && password === mockUser.password) {
+    //Devolvemos el ID del usuario-cliente
+    return { userId: id };
+  } else {
+    console.log({ error: "Missing credentials. This user don't exist" });
+    return { userId: NaN };
+  }
 }
 
 function signJWT(payload: { userId: number }): string {
   // Sign the jwt token
-  return jwt.sign(payload, TOKEN_SECRET, { expiresIn: "1800s" });
+  const TOKEN_SECRET = process.env.SECRET || "secret";
+  return jwt.sign(payload, TOKEN_SECRET, { expiresIn: "3600s" });
 }
 
 function verifyJWT(token: string) {
   // Verify the jwt token
+  const algo = jwt.verify(token, process.env.TOKEN_SECRET as string, { complete: true });
+  console.log("HOLA", algo);
 }
 
 const authService = {

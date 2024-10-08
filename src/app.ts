@@ -7,15 +7,21 @@ import usersController from "./controllers/user";
 
 import express from "express";
 import cors from "cors";
+import { seedDB } from "./seed";
 
 export const app = express();
+app.use(express.json());
 app.use(cors());
+
+seedDB();
 
 // public routes
 app.use("/", infoController);
+
 app.use("/login", loginController);
 
 // private routes
+
 app.use("/booking", bookingsController);
 
 app.use("/room", roomsController);
