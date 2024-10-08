@@ -1,10 +1,10 @@
-import CustomerModal from "../../validators/roomModel";
+import CustomerModal from "../../validators/customerModel";
 import { faker } from "@faker-js/faker";
 import { Customer, Status } from "../../interfaces/Customer";
 
 export async function seedCustomers() {
   try {
-    // Crear usuarios falsos
+    // Crear reseñas de clientes falsas
     const fakeCustomers: Customer[] = Array.from({ length: 10 }, (_, index) => ({
       id: index + 1,
       date: faker.date.past(),

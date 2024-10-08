@@ -4,7 +4,7 @@ import { TypeRoomBed, Status, Room } from "../../interfaces/Room";
 
 export async function seedRooms() {
   try {
-    // Crear usuarios falsos
+    // Crear habitaciones falsas
     const fakeRooms: Room[] = Array.from({ length: 10 }, (_, index) => ({
       id: index + 1,
       typeRoom_bed: faker.helpers.arrayElement([TypeRoomBed.SingleBed, TypeRoomBed.DoubleBed, TypeRoomBed.DoubleSuperior, TypeRoomBed.Suite]),

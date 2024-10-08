@@ -5,6 +5,8 @@ import { checkDatabaseExist } from "./db/dbCheckExist";
 import { getCollections } from "./services/collections/getCollections";
 import { seedUsers } from "./db/dbSeed/seedUsers";
 import { seedRooms } from "./db/dbSeed/seedRooms";
+import { seedCustomers } from "./db/dbSeed/seedCustomers";
+import { seedBookings } from "./db/dbSeed/seedBookings";
 
 dotenv.config();
 
@@ -30,10 +32,11 @@ export async function seedDB() {
       }
     }
 
+    // Sembramos todas las colecciones del proyecto
     await seedUsers();
     await seedRooms();
-    /* await seedCustomers();
-    await seedBookings(); */
+    await seedCustomers();
+    await seedBookings();
   } catch (err: any) {
     console.log(err.stack);
   } finally {
