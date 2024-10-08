@@ -1,17 +1,19 @@
 import { Request, Response, Router } from "express";
 import { Room } from "../interfaces/Room";
-import authMiddleware from "../middleware/auth";
+import RoomModel from "../validators/roomModel";
 import roomsData from "../data/dataRooms.json";
 
 const roomsController = Router();
 
-roomsController.get("/", authMiddleware, async (req: Request, res: Response) => {
+roomsController.get("/", async (req: Request, res: Response) => {
   try {
-    if (!roomsData || roomsData.length === 0) {
+    const allRooms = await RoomModel.find();
+
+    if (!allRooms || allRooms.length === 0) {
       res.status(404).json({ message: "No rooms found" });
     }
     // Si hay datos, los retornamos con un código 200 (OK)
-    res.status(200).json(roomsData);
+    res.status(200).json(allRooms);
   } catch (error: any) {
     // En caso de error, retornamos una respuesta 500 (Internal Server Error)
     res.status(500).json({ message: "Server error", error: error.message });
@@ -19,73 +21,70 @@ roomsController.get("/", authMiddleware, async (req: Request, res: Response) => 
 });
 
 roomsController.get("/:id", async (req: Request<{ id: number }>, res: Response) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  // Buscamos la habitación por su id
-  const room = roomsData.find((room) => room["id"] === Number(id));
+    // Buscamos la habitación por su id
+    const room = await RoomModel.findById(id);
 
-  if (!room) {
-    res.status(404).json({ message: "Room not found" });
-  } else {
+    if (!room) res.status(404).json({ message: "Room not found" });
+
     res.status(200).json(room);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving room" });
   }
 });
 
 roomsController.post("/", async (req: Request<Room>, res: Response) => {
-  const { body } = req;
+  try {
+    const { body } = req;
 
-  // Obtener todos los ids de roomsData y calcular el máximo
-  const ids = roomsData.map((room) => room["id"]);
-  const maxId = Math.max(...ids);
+    const newRoom = new RoomModel(body);
+    const savedRoom = await newRoom.save();
 
-  // Crear un nuevo room con un id incrementado
-  const newRoom = { ...body, id: maxId + 1 };
-
-  // Agregar la nueva habitación a roomsData
-  roomsData.push(newRoom);
-
-  // Enviar la respuesta con el nuevo array
-  res.status(201).json([...roomsData, newRoom]);
+    res.status(201).json(savedRoom);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error creating room" });
+  }
 });
 
 roomsController.put("/:id", async (req: Request<{ id: number }, {}, Room>, res: Response) => {
-  const { id } = req.params;
-  const { body } = req;
+  try {
+    const { id } = req.params;
+    const { body } = req;
 
-  // Encontramos el índice de la room por su id
-  const roomByIndex = roomsData.findIndex((room) => room["id"] === Number(id));
+    // Actualizamos la Room
+    const updatedRoom = RoomModel.findByIdAndUpdate(id, body, {
+      new: true,
+      runValidators: true,
+    });
 
-  // Si encontramos la room, la actualizamos
-  if (roomByIndex !== -1) {
-    const updatedRoom = { ...roomsData[roomByIndex], ...body };
+    if (!updatedRoom) {
+      res.status(404).json({ message: "Room not found" });
+    }
 
-    // Actualizamos el array de rooms con el objeto actualizado
-    roomsData[roomByIndex] = updatedRoom;
-
-    // Enviamos la respuesta con la room actualizada
-    res.status(200).json(updatedRoom);
+    res.json(updatedRoom);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error updating room" });
   }
-
-  // Si no encontramos la room, enviamos una respuesta 404
-  res.status(404).json({ message: "Room not found" });
 });
 
 roomsController.delete("/:id", async (req: Request<{ id: number }>, res: Response) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
+    const deletedRoom = await RoomModel.findByIdAndDelete(id);
 
-  // Encontramos el índice de la room por su id
-  const roomByIndex = roomsData.findIndex((room) => room["id"] === Number(id));
+    if (!deletedRoom) {
+      res.status(404).json({ message: "Room not found" });
+    }
 
-  // Si la room existe, la eliminamos
-  if (roomByIndex !== -1) {
-    // Eliminamos la room del array
-    const deletedRoom = roomsData.splice(roomByIndex, 1); // splice devuelve un array con los elementos eliminados
-
-    res.status(200).json({ message: "Room deleted successfully", deletedRoom });
+    res.status(204).send();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error deleting room" });
   }
-
-  // Si no encontramos la room, enviamos una respuesta 404
-  res.status(404).json({ message: "Room not found" });
 });
 
 export default roomsController;
