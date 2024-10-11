@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import { dbConnection } from "./db/dbConnection";
 import { checkDatabaseExist } from "./db/dbCheckExist";
-import { getCollections } from "./services/collections/getCollections";
+import { getCollections } from "./utils/collections/getCollections";
 import { seedUsers } from "./db/dbSeed/seedUsers";
 import { seedRooms } from "./db/dbSeed/seedRooms";
 import { seedCustomers } from "./db/dbSeed/seedCustomers";
@@ -45,3 +45,5 @@ export async function seedDB() {
     console.log("Base de datos desconectada");
   }
 }
+
+seedDB();
