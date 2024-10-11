@@ -1,16 +1,29 @@
 import { NextFunction, Request, Response } from "express";
 import authService from "../services/login";
 
-function authMiddleware(req: Request, res: Response, next: NextFunction) {
-  // Get the jwt token from the headers and verify it
+export interface AuthenticatedRequest extends Request {
+  user?: any;
+}
+
+async function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+  // Get token from the headers and verify it
   const authHeader = req.headers["authorization"] || "";
-  const token = authHeader && authHeader.split(" ")[1];
+  console.log("Obtener token de la req.header: ", authHeader);
+  const token = authHeader && authHeader.split(" ")[1]; // Obtener el token del header Authorization
+  console.log("token haciendole un split: ", token);
 
-  if (!token) res.sendStatus(401);
+  if (!token) {
+    res.status(401).json({ message: "Access denied. Token not provided." });
+  }
 
-  authService.verifyJWT(token);
-
-  next();
+  try {
+    // Verificar el token
+    const decoded = authService.verifyJWT(token);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    res.status(403).json({ message: "Invalid token" });
+  }
 }
 
 export default authMiddleware;

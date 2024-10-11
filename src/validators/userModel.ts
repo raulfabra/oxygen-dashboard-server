@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import { Status } from "../interfaces/User";
 
-interface UserSchemaInterface extends Document {
+export interface UserSchemaInterface extends Document {
   id: number;
+  password: string;
   fullName: string;
   email: string;
   phone: string;
@@ -17,6 +18,10 @@ const UserSchema = new mongoose.Schema<UserSchemaInterface>({
     type: Number,
     required: true,
     unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
   },
   fullName: {
     type: String,

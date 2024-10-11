@@ -3,17 +3,25 @@ import authService from "../services/login";
 
 const loginController = Router();
 
-loginController.post("/", (req: Request, res: Response) => {
-  const { id, email, password } = req.body;
+loginController.post("/", async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
 
-  // Verificar que las credenciales coinciden con el mockUser y return id.
-  const payload = authService.login(id, email, password);
+    // Hacer match de credenciales del user con la base de datos
+    const payload = await authService.login(email, password);
 
-  // Crear un token JWT que expire en 1 hora
-  const token = authService.signJWT(payload);
+    if (payload?.success) {
+      // Crear el token
+      const token = authService.signJWT(payload.user!);
 
-  //Devolvemos el token al cliente
-  res.json({ token });
+      // Devolvemos el Token en JSON
+      res.json({ token });
+    } else {
+      res.status(400).json({ message: payload?.message });
+    }
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 export default loginController;

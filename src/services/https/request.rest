@@ -3,6 +3,8 @@ GET http://localhost:3001
 GET http://localhost:3001/booking
 ###
 GET http://localhost:3001/room
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiQWRyaWFuYTk0QGdtYWlsLmNvbSIsImlhdCI6MTcyODY2MDAwNiwiZXhwIjoxNzI4NjYzNjA2fQ.4uJonvBNzwqIqRmC6rtbHt3xJqvE8T7-R7Iw1Mu9fYA
+Content-Type: application/json
 ###
 GET http://localhost:3001/user
 ###
@@ -13,9 +15,8 @@ POST http://localhost:3001/login
 content-type: application/json
 
 {
-  "id": 100,
-  "email": "employer33@gmail.com",
-  "password": "1234"
+  "email": "Adriana94@gmail.com",
+  "password": "employer1234"
 }
 ###
 POST http://localhost:3001/room

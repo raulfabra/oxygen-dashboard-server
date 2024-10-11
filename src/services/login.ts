@@ -1,30 +1,41 @@
-import { mockUser } from "../utils/constants";
+import UserModel, { UserSchemaInterface } from "../validators/userModel";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import bcrypt from "bcrypt";
 
 dotenv.config();
 
-function login(id: number, email: string, password: string) {
-  // Check if the user and password are correct
-  if (email === mockUser.email && password === mockUser.password) {
-    //Devolvemos el ID del usuario-cliente
-    return { userId: id };
-  } else {
-    console.log({ error: "Missing credentials. This user don't exist" });
-    return { userId: NaN };
+async function login(email: string, password: string) {
+  try {
+    // Verificar usuario en la BD
+    const user = await UserModel.findOne({ email });
+    if (!user) return { success: false, message: "User not found" };
+
+    // Verificar la contraseña del usuario
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return { success: false, message: "Password incorrect" };
+    }
+
+    // Devolvemos el user
+    return { success: true, message: "Authentication is correct", user };
+  } catch (error) {
+    console.log(error);
   }
 }
 
-function signJWT(payload: { userId: number }): string {
-  // Sign the jwt token
+function signJWT(user: UserSchemaInterface): string {
+  // Sign the jwt token, creamos/registramos el token del user loggeado
+  console.log(user);
   const TOKEN_SECRET = process.env.SECRET || "secret";
-  return jwt.sign(payload, TOKEN_SECRET, { expiresIn: "3600s" });
+  return jwt.sign({ payload: user.email }, TOKEN_SECRET, { expiresIn: 3600 });
 }
 
 function verifyJWT(token: string) {
   // Verify the jwt token
-  const algo = jwt.verify(token, process.env.TOKEN_SECRET as string, { complete: true });
-  console.log("HOLA", algo);
+  const TOKEN_SECRET = process.env.SECRET || "secret";
+  return jwt.verify(token, TOKEN_SECRET as string, { complete: true });
 }
 
 const authService = {
