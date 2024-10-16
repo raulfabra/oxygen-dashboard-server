@@ -1,16 +1,19 @@
 import { Request, Response, Router } from "express";
 import { User } from "../interfaces/User";
+import UserModel from "../validators/userModel";
 import usersData from "../data/dataUsers.json";
 
 const usersController = Router();
 
 usersController.get("/", async (req: Request, res: Response) => {
   try {
-    if (!usersData || usersData.length === 0) {
+    const allUsers = await UserModel.find();
+
+    if (!allUsers || allUsers.length === 0) {
       res.status(404).json({ message: "No rooms found" });
     }
     // Si hay datos, los retornamos con un código 200 (OK)
-    res.status(200).json(usersData);
+    res.status(200).json(allUsers);
   } catch (error: any) {
     // En caso de error, retornamos una respuesta 500 (Internal Server Error)
     res.status(500).json({ message: "Server error", error: error.message });
@@ -18,77 +21,68 @@ usersController.get("/", async (req: Request, res: Response) => {
 });
 
 usersController.get("/:id", async (req: Request<{ id: number }>, res: Response) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  // Buscamos la habitación por su id
-  const user = usersData.find((user) => user.id === Number(id));
+    const user = await UserModel.findById(id);
 
-  if (!user) {
-    res.status(404).json({ message: "Room not found" });
-  } else {
+    if (!user) res.status(404).json({ message: "User not found" });
+
     res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving user" });
   }
 });
 
 usersController.post("/", async (req: Request<{}, {}, User>, res: Response) => {
-  const { body } = req;
+  try {
+    const { body } = req;
 
-  // Obtener todos los ids de roomsData y calcular el máximo
-  const ids = usersData.map((user) => user["id"]);
-  const maxId = Math.max(...ids);
+    const newUser = new UserModel(body);
+    const savedUser = await newUser.save();
 
-  // Crear un nuevo room con un id incrementado
-  const newUser = { ...body, id: maxId + 1, startDate: body.startDate.toDateString() };
-
-  // Agregar la nueva habitación a roomsData
-  usersData.push(newUser);
-
-  // Enviar la respuesta con el nuevo array
-  res.status(201).json([...usersData, newUser]);
+    res.status(201).json(savedUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error creating user" });
+  }
 });
 
 usersController.put("/:id", async (req: Request<{ id: number }, {}, User>, res: Response) => {
-  const { id } = req.params;
-  const { body } = req;
+  try {
+    const { id } = req.params;
+    const { body } = req;
 
-  // Encontramos el índice de la booking por su id
-  const userByIndex = usersData.findIndex((user) => user["id"] === Number(id));
+    const updatedUser = UserModel.findByIdAndUpdate(id, body, {
+      new: true,
+      runValidators: true,
+    });
 
-  // Si encontramos la booking, la actualizamos
-  if (userByIndex !== -1) {
-    const updatedUser = {
-      ...usersData[userByIndex],
-      ...body,
-      startDate: body.startDate.toDateString(),
-    };
+    if (!updatedUser) {
+      res.status(404).json({ message: "User not found" });
+    }
 
-    // Actualizamos el array de bookings con el objeto actualizado
-    usersData[userByIndex] = updatedUser;
-
-    // Enviamos la respuesta con la booking actualizada
-    res.status(200).json(updatedUser);
+    res.json(updatedUser);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error updating user" });
   }
-
-  // Si no encontramos la booking, enviamos una respuesta 404
-  res.status(404).json({ message: "booking not found" });
 });
 
 usersController.delete("/:id", async (req: Request<{ id: number }>, res: Response) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
+    const deletedUser = await UserModel.findByIdAndDelete(id);
 
-  // Encontramos el índice de la booking por su id
-  const userByIndex = usersData.findIndex((user) => user["id"] === Number(id));
+    if (!deletedUser) {
+      res.status(404).json({ message: "User not found" });
+    }
 
-  // Si la booking existe, la eliminamos
-  if (userByIndex !== -1) {
-    // Eliminamos la booking del array
-    const deletedUser = usersData.splice(userByIndex, 1); // splice devuelve un array con los elementos eliminados
-
-    res.status(200).json({ message: "booking deleted successfully", deletedUser });
+    res.status(204).send();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error deleting user" });
   }
-
-  // Si no encontramos la booking, enviamos una respuesta 404
-  res.status(404).json({ message: "booking not found" });
 });
 
 export default usersController;
