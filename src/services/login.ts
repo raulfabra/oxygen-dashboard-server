@@ -27,7 +27,6 @@ async function login(email: string, password: string) {
 
 function signJWT(user: UserSchemaInterface): string {
   // Sign the jwt token, creamos/registramos el token del user loggeado
-  console.log(user);
   const TOKEN_SECRET = process.env.SECRET || "secret";
   return jwt.sign({ payload: user.email }, TOKEN_SECRET, { expiresIn: 3600 });
 }
