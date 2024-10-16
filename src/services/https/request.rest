@@ -3,10 +3,11 @@ GET http://localhost:3001
 GET http://localhost:3001/booking
 ###
 GET http://localhost:3001/room
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiQWRyaWFuYTk0QGdtYWlsLmNvbSIsImlhdCI6MTcyODY2MDAwNiwiZXhwIjoxNzI4NjYzNjA2fQ.4uJonvBNzwqIqRmC6rtbHt3xJqvE8T7-R7Iw1Mu9fYA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiQ2F0aHkyMUBob3RtYWlsLmNvbSIsImlhdCI6MTcyOTEwNDM1MCwiZXhwIjoxNzI5MTA3OTUwfQ.xxsjQN5h3lrewENnHXBNBqcewN1SWZaROYbsmyNVIps
 Content-Type: application/json
 ###
 GET http://localhost:3001/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiQWRyaWFuYTk0QGdtYWlsLmNvbSIsImlhdCI6MTcyOTEwNTExMywiZXhwIjoxNzI5MTA4NzEzfQ.ocg51CKxb0eGrpB2JHuxH7A0AA4md7RcgI8DZVw8iGQ
 ###
 GET http://localhost:3001/customer
 
